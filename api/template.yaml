@@ -1,0 +1,478 @@
+openapi: 3.0.1
+info:
+  title: Expense Tracker
+  description: 'The API provided in the Expense Tracker SPA'
+  version: 1.0.0
+
+servers:
+- url: https://https://hair-vienna-8080.codio-box.uk/api
+  description: Expense Tracker
+
+paths:
+  /accounts:
+    get:
+      tags:
+      - Accounts
+      summary: Check authentication credentials
+      description: This API call is used to validate the credentials passed in the **Authorization headers**.
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+        401:
+          description: invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+    post:
+      tags:
+      - Accounts
+      summary: Create a new account
+      description: This API call is used to create a new account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: account added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  msg:
+                    type: string
+        400:
+          description: invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+
+
+
+  /expenses:
+    get:
+      tags:
+      - Expenses
+      summary: Return non approved expenses from user
+      description: This API is used to return all expenses non approved from a user.
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  expenseForm:
+                    type: object
+        401:
+          description: invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+    post:
+      tags:
+      - Expenses
+      summary: Add expense
+      description: This API is used to add a new expense to the database with the not-approved status.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expenseForm:
+                  properties:
+                      username:
+                        type: string
+                      currentDate:
+                        type: string
+                      status:
+                        type: string
+                      date:
+                        type: string
+                      category:
+                        type: string
+                      label:
+                        type: string
+                      amount:
+                        type: number
+                      description:
+                        type: string
+                      urlReceipt:
+                        type: string
+      responses:
+        201:
+          description: expense added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  msg:
+                    type: string
+        400:
+          description: invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+
+
+
+  /expenses/id:
+    get:
+      tags:
+      - Expense
+      summary: Expense description by id
+      description: This API is used to retrieve the data from an expense and return it.
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  expense:
+                    properties: 
+                      username:
+                        type: string
+                      currentDate:
+                        type: string
+                      status:
+                        type: string
+                      date:
+                        type: string
+                      category:
+                        type: string
+                      label:
+                        type: string
+                      amount:
+                        type: number
+                      description:
+                        type: string
+                      upload:
+                        type: object
+        401:
+          description: invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+    post:
+      tags:
+      - Expense
+      summary: Enlarge receipt
+      description: This API is used to enlarge the reciept (supposed to be used when clicked).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                receipt:
+                  properties: 
+                    id:
+                      type: number
+      responses:
+        200:
+          description: enlarge
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  msg:
+                    type: string
+                  url:
+                    type: string
+                  enlarge:
+                    type: boolean
+        400:
+          description: invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+    put:
+      tags:
+      - Expense
+      summary: Approve or decline
+      description: This API is used by managers to approve or decline expenses by changing their status.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expense:
+                  properties:
+                      status:
+                        type: string
+                      id:
+                        type: number
+      responses:
+        200:
+          description: expense altered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  msg:
+                    type: string
+        400:
+          description: invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+
+
+
+
+  /users:
+    get:
+      tags:
+      - Users
+      summary: Users list and expenses to be dealt with
+      description: This API is used by managers to return a summary of all users and expenses to be dealt with.
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list:
+                    properties: 
+                      waitingApproval:
+                        type: number
+                      amountTotal:
+                        type: number
+                      users:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          picture:
+                            type: string
+                          total:
+                            type: number
+        401:
+          description: invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+  
+  
+  
+  /users/id:
+    get:
+      tags:
+      - User
+      summary: User description by user id
+      description: This API is used to retrieve the data from a user and return it.
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    properties: 
+                      username:
+                        type: string
+                      total:
+                        type: number
+                      expenses:
+                        type: object
+                        properties:
+                          dateOfIncurrence:
+                            type: string
+                          dateOfEntry:
+                            type: string
+                          amount:
+                            type: number
+                          label:
+                            type: string
+        401:
+          description: invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+    post:
+      tags:
+      - User
+      summary: To be used on click
+      description: This API is used to extract the id of the expense clicked.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expense:
+                  properties: 
+                    id:
+                      type: number
+      responses:
+        200:
+          description: Id extracted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  expense:
+                    properties:
+                      id:
+                        type: number
+        400:
+          description: invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

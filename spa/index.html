@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf8" />
+		<meta name="viewport" content="width=device-width", initial-scale="1.0" />
+		<title>Single Page App</title>
+		<link rel="stylesheet" href="style/main.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.4.0/showdown.min.js"></script>
+		<script type="module" src="./router.js" defer></script>
+	</head>
+	<body>
+		<aside class="hidden"><p></p></aside>
+		<header>
+			<h1>Single Page App</h1>
+			<p>&nbsp;</p>
+		</header>
+		<nav>
+			<ul>
+				<li><a href="/">Home</a></li>
+				<li><a href="/manager">Manager</a></li>
+				<li><a href="/register">Register</a></li>
+				<li><a href="/login">Log in</a></li>
+				<li><a href="/logout">Log out</a></li>
+			</ul>
+		</nav>
+		<main>
+			<article>
+			</article>
+		</main>
+		<footer>
+			<p>&nbsp;</p>
+		</footer>
+	</body>
+	<template id="login">
+		<form name="login">
+			<p><label for="email">Username</label><br /><input type="text" name="user" placeholder="username" /></p>
+			<p><label for="pass">Password</label><br /><input type="password" name="pass" placeholder="password" /></p>
+			<p><button type="submit">Log in</button></p>
+		</form>
+	</template>
+	<template id="register">
+		<form id="registerForm" name="register">
+			<p><label for="user">Username</label><br /><input type="text" name="user" placeholder="username" /></p>
+			<p><label for="pass">Password</label><br /><input type="password" name="pass" placeholder="password" /></p>
+			<p><label for="name">Full Name</label><br /><input type="text" name="fullname" placeholder="fullname" /></p>
+			<p><label for="avatar">Profile Picture</label><br /><input type="file" name="avatar" placeholder="Upload a profile picture." accept="image/*" /></p>
+			<p><button type="submit">Create account</button></p>
+		</form>
+	</template>
+	<template id="logout">
+		<p>Do you want to log out?</p>
+		<p><button>OK</button><button>Cancel</button></p>
+	</template>
+	<template id="home">
+		<h2>Welcome to the Expense Tracker</h2>
+		<button id="add">Add expense</button>
+		<br/>
+        <table id="expenseTable">
+			<thead>
+				<th>Addition date</th>
+				<th>Incurrence date</th>
+				<th>Label</th>
+				<th>Amount in &#163</th>
+			</thead>
+			<tbody id="expenseList">
+			</tbody>
+		</table>
+		<article id="expenseTotal" style="margin-top: 2em;"></article>
+	</template>
+	<template id="manager">
+		<h2>Welcome to the Expense Tracker</h2>
+		<article id="expensesNum"></article>
+		<article id="expensesAmount"></article>
+		<h3 id="userList"> User list
+			<article id="users">
+			</article>
+		</h3>
+	</template>
+	<template id="user">
+		<h2>Welcome to the Expense Tracker</h2>
+        <table id="expenseTable">
+			<thead>
+				<th>Addition date</th>
+				<th>Incurrence date</th>
+				<th>Label</th>
+				<th>Amount in &#163</th>
+			</thead>
+			<tbody id="expenseList">
+			</tbody>
+		</table>
+		<article id="expenseTotal" style="margin-top: 2em;"></article>
+	</template>
+	<template id="expense">
+        <article id="expenseDesc"></article>
+		<button id="resetReceipt" class="hidden"></button>
+	</template>
+	<template id="addExpense">
+		<form name="addExpense">
+			<p><label for="date">Date of incurrence</label><br /><input type="date" name="date" required="required"/></p>
+			<p><label for="category">Category of expense</label>
+				<br />
+				<select name="categories" id="category" required="required">
+					<option value=""-- Please, select one of below. -- /option>
+					<option value="Travel">Travel</option>
+					<option value="Food & Drink">Food & Drink</option>
+					<option value="Accomodation">Accomodation</option>
+					<option value="Other necessities">Other</option>
+				</select>
+			</p>
+			<p><label for="label">Label</label><br /><input type="text" name="label" placeholder="Short label." required="required"/></p>
+			<p><label for="amount">Amount</label><br /><input type="number" name="amount" placeholder="0 GBP" min=0 step=".01" required="required"></p>
+			<p><label for="description">Description</label><br /><textarea name="description" placeholder="Description of expense (optional)"></textarea></p>
+			<p><label for="receipt">Receipt</label><br /><input type="file" name="receipt" placeholder="Upload a scanned receipt." accept="image/*"/></p>
+			<p><button type="submit">Add expense</button></p>
+		</form>
+	</template>
+</html>
