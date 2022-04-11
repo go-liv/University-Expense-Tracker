@@ -7,7 +7,6 @@ export async function setup(node) {
 	try {
 		console.log('LOGIN: setup')
 		console.log(node)
-		document.querySelector('header p').innerText = 'Login Page'
 		customiseNavbar(['login', 'register'])
 		node.querySelector('form').addEventListener('submit', await login)
 	} catch(err) {
@@ -35,7 +34,9 @@ async function login() {
 	if(response.status === 200) {
 		localStorage.setItem('username', json.username)
 		localStorage.setItem('role', json.role)
-		localStorage.setItem('authorization', token)
+		console.log(json.jwtHash)
+		const jwt = 'Bearer ' + json.jwtHash
+		localStorage.setItem('authorization', jwt)
 		console.log(`you are logged in as ${JSON.stringify(json.username)}`)
 		if(json.role === 1) {
 			loadPage('manager')

@@ -7,7 +7,6 @@ export async function setup(node) {
 	console.log('Add Expense: setup')
 	try {
 		console.log(node)
-		document.querySelector('header p').innerText = 'Add Expense'
 		customiseNavbar(['home', 'logout'])
 		if(localStorage.getItem('authorization') === null) loadPage('login')
         // Waiting for user expense form submission

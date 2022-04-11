@@ -6,19 +6,19 @@
 		/* https://material.io/components */
 		/* https://saruwakakun.com/en/material-color */
 		/* brand colours */
-	--colorPrimary: #607D8B;						/* BG */
-	--colorPrimaryVariant: #455A64;			/* BG */
-	--colorOnPrimary: lightgray;						/* FG */
-	--colorSecondary: #FDD835;					/* BG */
-	--colorSecondaryVariant: #A6B6BE;		/* BG */
-	--colorOnSecondary: white;					/* FG */
+	--colorPrimary: #1D2F6F;						/* BG */
+	--colorPrimaryVariant: #384a8d;						/* BG */
+	--colorOnPrimary: #cecece;						/* FG */
+	--colorSecondary: #FAC748;					/* BG */
+	--colorSecondaryVariant: #c99000;					/* BG */
+	--colorOnSecondary: #292929;					/* FG */
 		/* interface colours */
-	--colorBackground: #EDEDED;					/* BG */
-	--colorOnBackground: #333;			/* FG */
-	--colorSurface: white;							/* BG */
-	--colorOnSurface: #212121;					/* FG */
-	--colorError: pink;									/* BG */
-	--colorOnError: red;								/* FG */
+	--colorBackground: #F9E9EC;					/* BG */
+	--colorOnBackground: #292929;			/* FG */
+	--colorSurface: #8390FA;							/* BG */
+	--colorOnSurface: #292929;					/* FG */
+	--colorError: #FF7373;									/* BG */
+	--colorOnError: #ffffff;								/* FG */
 }
 
 @font-face {
@@ -153,7 +153,42 @@ main p {
 	color: var(--colorOnBackground);
 }
 
-/* =========== FORM =========== */
+.alert {
+	font-size: 0.8em;
+	color: var(--colorOnError);
+}
+
+/* =========== MANAGER =========== */
+
+#userList {
+	padding: 0;
+	max-width: 600px;
+}
+
+#userImg {
+	position: relative;
+	padding: 0;
+	left: 0;
+	max-width: 170px;
+	max-height: 170px;
+}
+
+#userInfo {
+	position: relative;
+	padding: 0;
+	left: 200px;
+	top: -120px;
+}
+/* =========== EXPENSE PAGE =========== */
+#descriptionBox {
+	position: relative;
+	padding: 0;
+	left: 360px;
+	top: -40px;
+	max-width: 40%;
+}
+
+/* =========== EXPENSE FORM =========== */
 
 form p {
 	margin-top: 1em;
@@ -190,8 +225,37 @@ button:hover {
   background-color: white;
 }
 
-table, th, td {
-  border: 1px solid;
+td > button {
+	background-color: var(--colorBackground);
+	border: 0;
+	border-radius: 0.3em;
+	box-shadow : 2px 2px 2px lightgrey;
+	color: var(--colorOnBackground);
+	padding: 0.8em 1.3em;
+	margin: 0.2em;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 0.8em;
+	margin-top: 0.5em;
+}
+
+table {
+	margin-top: 2em;
+ 	border: 0.5em solid var(--colorPrimary);
+  	width: 100%;
+}
+
+thead, th {
+	border-bottom: 0.5em solid var(--colorPrimary);
+}
+
+th, td {
+	text-align: justify;
+}
+
+img {
+	transition: transform 0.5s ease;
 }
 
 /* ========== FOOTER ========== */

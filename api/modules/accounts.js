@@ -7,8 +7,7 @@ import { db } from './db.js'
 const saltRounds = 10
 const salt = await genSalt(saltRounds)
 
-export async function login(credentials) {
-	const { user, pass, fullname } = credentials
+export async function login(user, pass) {
 	let sql = `SELECT count(id) AS count FROM accounts WHERE user="${user}";`
 	let records = await db.query(sql)
 	if(!records[0].count) throw new Error(`username "${user}" not found`)
@@ -40,7 +39,7 @@ export async function register(credentials) {
 	let sql = `INSERT INTO accounts(user, pass, fullname, avatar) VALUES("${user}", "${pass}", "${fullname}", "${avatar}");`
 	await db.query(sql)
 	const userId = await db.query(`SELECT id FROM accounts WHERE user="${user}";`)
-	sql = `INSERT INTO roles(userid, manager) VALUES("${userId}", 0);`
+	sql = `INSERT INTO roles(userid, manager) VALUES("${userId[0].id}", 0);`
 	console.log(sql)
 	await db.query(sql)
 

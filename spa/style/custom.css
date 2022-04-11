@@ -6,19 +6,19 @@
 		/* https://material.io/components */
 		/* https://saruwakakun.com/en/material-color */
 		/* brand colours */
-	--colorPrimary: #607D8B;						/* BG */
-	--colorPrimaryVariant: #455A64;			/* BG */
-	--colorOnPrimary: lightgray;						/* FG */
-	--colorSecondary: #FDD835;					/* BG */
-	--colorSecondaryVariant: #A6B6BE;		/* BG */
-	--colorOnSecondary: white;					/* FG */
+	--colorPrimary: #1D2F6F;						/* BG */
+	--colorPrimaryVariant: #384a8d;						/* BG */
+	--colorOnPrimary: #cecece;						/* FG */
+	--colorSecondary: #FAC748;					/* BG */
+	--colorSecondaryVariant: #c99000;					/* BG */
+	--colorOnSecondary: #292929;					/* FG */
 		/* interface colours */
-	--colorBackground: #EDEDED;					/* BG */
-	--colorOnBackground: #333;			/* FG */
-	--colorSurface: white;							/* BG */
-	--colorOnSurface: #212121;					/* FG */
-	--colorError: pink;									/* BG */
-	--colorOnError: red;								/* FG */
+	--colorBackground: #F9E9EC;					/* BG */
+	--colorOnBackground: #292929;			/* FG */
+	--colorSurface: #8390FA;							/* BG */
+	--colorOnSurface: #292929;					/* FG */
+	--colorError: #FF7373;									/* BG */
+	--colorOnError: #ffffff;								/* FG */
 }
 
 @font-face {
@@ -40,15 +40,16 @@ body {
 
 aside {
 	position:absolute;
+	text-align: center;
 	left:0;
 	right:0;
 	top: 155px;
 	margin-left:auto;
 	margin-right:auto;
 	max-width: 200px;	
-	background-color: var(--colorPrimary);
+	background-color: var(--colorError);
 	padding: 0.5em;
-	color: var(--colorOnPrimary);
+	color: var(--colorOnError);
 	font-size: 0.8em;
 	border-radius: 0.2em;
 }
@@ -117,19 +118,8 @@ nav li > a {
 	cursor: pointer;
 }
 
-nav li:hover a {
-/* 	background-color: var(--colorPrimaryVariant); */
-/* 	color: white; */
-}
-
-nav li:hover {
-/* 	background-color: grey; */
-}
-
 .currentpage {
-	border-bottom:4px solid var(--colorSecondaryVariant);
-/* 	background-color: white; */
-/* 	background-color: #BBB; */
+	border-bottom:4px solid var(--colorPrimaryVariant);
 }
 
 /* =========== MAIN =========== */
@@ -180,11 +170,12 @@ main p {
 	top: -120px;
 }
 /* =========== EXPENSE PAGE =========== */
-#description {
+#descriptionBox {
 	position: relative;
 	padding: 0;
 	left: 360px;
 	top: -40px;
+	max-width: 40%;
 }
 
 /* =========== EXPENSE FORM =========== */

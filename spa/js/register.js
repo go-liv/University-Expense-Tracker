@@ -7,7 +7,6 @@ export async function setup(node) {
 	try {
 		console.log('REGISTER: setup')
 		console.log(node)
-		document.querySelector('header p').innerText = 'Register an Account'
 		customiseNavbar(['register', 'login'])
 		node.querySelector('#registerForm').addEventListener('submit', await register)
 	} catch(err) { // this will catch any errors in this script
@@ -25,7 +24,7 @@ async function register() {
 	const options = {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/vnd.api+json'
 		},
 		body: JSON.stringify({
 			'user': data.get('user'),

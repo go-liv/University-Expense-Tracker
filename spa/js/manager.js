@@ -7,25 +7,28 @@ export async function setup(node, userID = null) {
 	console.log('Manager: setup')
 	try {
 		console.log(node)
+        console.log(localStorage.getItem('authorization'))
 		if(localStorage.getItem('authorization') === null) {
 			loadPage('login')
 			return
 		}
 		if(localStorage.getItem('role') !== "1") loadPage('home')
-		document.querySelector('header p').innerText = 'Manager'
 		
 		customiseNavbar(['manager', 'logout'])
 		
 		const expenses = await loadExpenses(node)
         const users = await loadUserList(node, expenses.info)
-
-		if(node.querySelector('#expenseTable')) {
-			document.querySelector('header p').innerText = 'Expenses'
-			await createExpenseList(node, expenses, userID)
-		} else {
-			await loadExpensesAwaiting(node, expenses)
-            await createUserList(node, users, expenses)
-		}
+        if(users.errors) {
+            loadPage('login')
+			return
+        } else {
+            if(node.querySelector('#expenseTable')) {
+                await createExpenseList(node, expenses, userID)
+            } else {
+                await loadExpensesAwaiting(node, expenses)
+                await createUserList(node, users, expenses)
+            }
+        }
 	} catch(err) {
 		console.error(err)
 	}
@@ -42,6 +45,7 @@ async function loadExpenses(node) {
 		}
 	}
 	const response = await fetch(url, options)
+    if(response.status === 401) loadPage('login')
 	const json = await response.json()
 
 	return json
@@ -52,7 +56,7 @@ async function loadExpensesAwaiting(node, expenses) {
 	expenses.info.forEach( (result, i) => { totalAmount += expenses.info[i].amount })
 	
 	node.querySelector('#expensesNum').innerHTML = `<h3>Number of unapproved expenses:</h3> ${expenses.count[0].count}<br />`
-	node.querySelector('#expensesAmount').innerHTML = `<h3>Totals to: </h3>\u00A3${totalAmount}<br />`
+	node.querySelector('#expensesAmount').innerHTML = `<h3>Totals to: </h3>\u00A3${totalAmount.toFixed(2)}<br />`
 }
 
 async function loadUserList(node, expenses) {
@@ -66,7 +70,7 @@ async function loadUserList(node, expenses) {
 		}
 	}
 	const response = await fetch(url, options)
-	
+	if(response.status === 401) loadPage('login')
 	const userObj = await response.json()
 	
 	return userObj
@@ -76,7 +80,9 @@ async function createUserList(node, userObj, expenses) {
 	userObj.users.forEach( user => { 
 		let userCount = 0
 		let index = 0
+		
 		expenses.info.forEach( (expense, i) => {
+			console.log(`${JSON.stringify(expense)} :: ${user.user}`)
 			if (expense.user === user.user) {
 				userCount += 1
 			}
@@ -84,7 +90,7 @@ async function createUserList(node, userObj, expenses) {
 		})
 		node.querySelector('#users').innerHTML +=
 		`<a href="/user-${user.user}"><img id="userImg" src="${user.avatar}" alt="Profile Picture" width="170" height="170" /></a>
-		<p id="userInfo"><b> User: ${user.user} <br /> Full Name: ${user.fullname} <br /> Total Unclaimed Expenses: ${userCount}</b></p>
+		<p id="userInfo"><b> User: <a href="/user-${user.user}">${user.user}</a> <br /> Full Name: ${user.fullname} <br /> Total Unclaimed Expenses: ${userCount}</b></p>
 		<br /><br />`
 	})
 }

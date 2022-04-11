@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf8" />
 		<meta name="viewport" content="width=device-width", initial-scale="1.0" />
-		<title>Single Page App</title>
+		<title>Expense Tracker</title>
 		<link rel="stylesheet" href="style/main.css">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.4.0/showdown.min.js"></script>
 		<script type="module" src="./router.js" defer></script>
@@ -11,7 +11,7 @@
 	<body>
 		<aside class="hidden"><p></p></aside>
 		<header>
-			<h1>Single Page App</h1>
+			<h1>Expense Tracker</h1>
 			<p>&nbsp;</p>
 		</header>
 		<nav>
@@ -52,7 +52,6 @@
 		<p><button>OK</button><button>Cancel</button></p>
 	</template>
 	<template id="home">
-		<h2>Welcome to the Expense Tracker</h2>
 		<button id="add">Add expense</button>
 		<br/>
         <table id="expenseTable">
@@ -68,7 +67,6 @@
 		<article id="expenseTotal" style="margin-top: 2em;"></article>
 	</template>
 	<template id="manager">
-		<h2>Welcome to the Expense Tracker</h2>
 		<article id="expensesNum"></article>
 		<article id="expensesAmount"></article>
 		<h3 id="userList"> User list
@@ -77,7 +75,6 @@
 		</h3>
 	</template>
 	<template id="user">
-		<h2>Welcome to the Expense Tracker</h2>
         <table id="expenseTable">
 			<thead>
 				<th>Addition date</th>
@@ -104,7 +101,7 @@
 					<option value="Travel">Travel</option>
 					<option value="Food & Drink">Food & Drink</option>
 					<option value="Accomodation">Accomodation</option>
-					<option value="Other necessities">Other</option>
+					<option value="Other">Other</option>
 				</select>
 			</p>
 			<p><label for="label">Label</label><br /><input type="text" name="label" placeholder="Short label." required="required"/></p>

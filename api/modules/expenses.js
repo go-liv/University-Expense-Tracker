@@ -13,7 +13,7 @@ export async function addExpense(data) {
 
 export async function getExpenses(user, role) {
 	if (role === 1) {
-		const getExpenseInfo = `SELECT * FROM expense WHERE approvalStatus="not-approved" ORDER BY incDate DESC;`
+		const getExpenseInfo = `SELECT id, currDate, incDate, label, amount, user FROM expense WHERE approvalStatus="not-approved" ORDER BY incDate DESC;`
 		const info = await db.query(getExpenseInfo)
 		const getCount = `SELECT count(id) as count FROM expense WHERE approvalStatus="not-approved";`
 		const count = await db.query(getCount)
@@ -28,8 +28,14 @@ export async function getExpenses(user, role) {
 	}
 }
 
-export async function getExpenseDesc(id) {
-	const getExpenseDesc = `SELECT * FROM expense WHERE id="${id}";`
+export async function getExpenseDesc(id, user, role) {
+	let getExpenseDesc = null
+	if(role === 1) {
+		getExpenseDesc = `SELECT * FROM expense WHERE id="${id}";`
+	} else {
+		getExpenseDesc = `SELECT * FROM expense WHERE id="${id}" AND user="${user}";`
+	}
+	
 	const expense = await db.query(getExpenseDesc)
 	console.log(expense)
 	return expense

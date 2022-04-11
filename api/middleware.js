@@ -2,9 +2,8 @@
 /* middleware.js */
 
 import { Application, send, Status } from 'https://deno.land/x/oak@v10.4.0/mod.ts'
-// status codes https://deno.land/std@0.82.0/http/http_status.ts
-// import { Md5 } from 'https://deno.land/std@0.89.0/hash/md5.ts'
-import { extractCredentials, fileExists, getEtag, setHeaders } from './modules/util.js'
+import { oakCors } from 'https://deno.land/x/cors/mod.ts'
+import { extractCredentials, fileExists, getEtag, setHeaders, validJWT } from './modules/util.js'
 import { login } from './modules/accounts.js'
 
 import router from './routes.js'
@@ -69,7 +68,7 @@ async function authHeaderPresent(context, next) {
 				errors: [
 					{
 						title: '201 Unauthorized',
-						detail: 'the API uses HTTP Basic Auth and requires a correctly-formatted Authorization header'
+						detail: 'the API uses JWT and requires a correctly-formatted Authorization header'
 					}
 				]
 			}
@@ -95,15 +94,14 @@ async function validCredentials(context, next) {
 	}
 
 	// registering a new account so auth header not needed
-	if(path === '/api/accounts' && method === 'POST') {
+	if(path === '/api/accounts') {
 		await next()
 		return
 	}
 
 	try {
-		const credentials = extractCredentials(token)
-		console.log(credentials)
-		await login(credentials)
+		const [type, hash] = token.split(' ')
+		await validJWT(hash)
 	} catch(err) {
 		console.log('ERROR')
 		console.log(err)
@@ -166,6 +164,15 @@ async function errorHandler(context, next) {
 	return
 }
 
+const corsOpt = {
+	// To use api testing tools set origin: '*'
+	origin: 'https://hair-vienna-8080.codio-box.uk',
+	methods: ['GET', 'POST', 'PUT'],
+	allowedHeaders: ['Content-Type', 'Authorization'],
+	credentials: true
+}
+
+app.use(oakCors(corsOpt))
 app.use(errorHandler)
 app.use(checkContentType)
 app.use(authHeaderPresent)

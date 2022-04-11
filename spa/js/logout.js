@@ -15,6 +15,7 @@ export async function setup(node) {
 			console.log(event.target.innerText)
 			if(event.target.innerText === 'OK') {
 				localStorage.removeItem('username')
+				localStorage.removeItem('role')
 				localStorage.removeItem('authorization')
 				loadPage('login')
 				showMessage('you are logged out')

@@ -12,7 +12,6 @@ export async function setup(node, pageIndex) {
 			return
 		} 
 		if(localStorage.getItem('role') === "1" && !(node.querySelector('#expenseDesc'))) loadPage('manager')
-		document.querySelector('header p').innerText = 'Home'
 		if(localStorage.getItem('role') === "1") {
 			customiseNavbar(['manager', 'logout'])
 		} else {
@@ -20,7 +19,6 @@ export async function setup(node, pageIndex) {
 		}
 		const json = await loadExpenses(node)
 		if(node.querySelector('#expenseDesc')) {
-			document.querySelector('header p').innerText = 'Expense'
 			await loadExpenseDesc(node, json, pageIndex)
 		} else {
 			await createExpenseList(node, json)
@@ -46,6 +44,7 @@ async function loadExpenses(node) {
 		}
 	}
 	const response = await fetch(url, options)
+	if(response.status === 401) loadPage('login')
 	const json = await response.json()
 	
 	return json
@@ -79,6 +78,7 @@ async function loadExpenseDesc(node, expenses, pageIndex) {
 		}
 	}
 	const response = await fetch(url, options)
+	if(response.status === 401) loadPage('login')
 	const json = await response.json()
 	
 	// options for markdown converter
@@ -98,7 +98,7 @@ async function loadExpenseDesc(node, expenses, pageIndex) {
 	<p><b> Incurrence date: </b> ${json.expense[0].incDate.split('T',1)}</p>
 	<p><b> Category: </b> ${json.expense[0].category}</p>
 	<p><b> Label: </b> ${json.expense[0].label}</p>
-	<article id='description'><b>Description:</b></br>${html}</article>
+	<article id='descriptionBox'><b>Description:</b></br>${html}</article>
 	<img src="${json.expense[0].receipt}" id="receipt" alt="Scanned receipt" width="150" height="75" />`
 }
 
@@ -112,7 +112,8 @@ async function enlargeReceipt(event) {
 	document.querySelector('#resetReceipt').innerText = 'Reset receipt size'
 	document.querySelector('#resetReceipt').classList.remove('hidden')
 	const reset = document.querySelector('#resetReceipt')
-	reset.style.float = 'right'
+	reset.style.position = 'absolute'
+	reset.style.left = '65%'
 }
 
 async function reduceReceipt(event) {

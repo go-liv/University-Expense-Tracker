@@ -1,3 +1,4 @@
+CREATE DATABASE IF NOT EXISTS website;
 
 -- make sure the websiteuser account is set up and has the correct privileges
 CREATE USER IF NOT EXISTS websiteuser IDENTIFIED BY 'websitepassword';
@@ -32,10 +33,6 @@ CREATE TABLE IF NOT EXISTS expense (
   description LONGTEXT,
   receipt LONGBLOB NOT NULL
 );
-
-
-INSERT INTO roles(userid, manager) VALUES(6, 0);
-  (2, 1);
 
 
 

@@ -4,6 +4,13 @@
 import { Status } from 'https://deno.land/x/oak@v6.5.1/mod.ts'
 import { Base64 } from 'https://deno.land/x/bb64/mod.ts'
 import { Md5 } from 'https://deno.land/std/hash/md5.ts'
+import { decode, create, verify } from "https://deno.land/x/djwt@v2.4/mod.ts";
+
+const key = await crypto.subtle.generateKey(
+  { name: "HMAC", hash: "SHA-512" },
+  true,
+  ["sign", "verify"],
+);
 
 export function setHeaders(context, next) {
 	console.log('setHeaders')
@@ -16,19 +23,35 @@ export function setHeaders(context, next) {
 	next()
 }
 
+export async function decodeJWT(jwt) {
+	const [header, payload, signature] = await decode(jwt)
+	return payload
+}
+
+export async function createJWT(user, role) {
+	console.log(`USER: ${user}`)
+	const jwt = await create({ alg: "HS512", typ: "JWT" }, { username: user, role: role }, key)
+	return jwt
+}
+
+export async function validJWT(jwt) {
+	try {
+		const payload = await verify(jwt, key);
+		return payload
+	} catch(err) {
+		console.log(err)
+		throw new Error(err)
+	}
+}
+
 export function extractCredentials(token) {
 	console.log('checkAuth')
 	if(token === undefined) throw new Error('no auth header')
 	const [type, hash] = token.split(' ')
 	console.log(`${type} : ${hash}`)
-	if(type !== 'Basic') throw new Error('wrong auth type')
-	const str = atob(hash)
-	console.log(str)
-	if(str.indexOf(':') === -1) throw new Error('invalid auth format')
-	const [user, pass] = str.split(':')
-	console.log(user)
-	console.log(pass)
-	return { user, pass }
+	if(type !== 'Bearer') throw new Error('wrong auth type')
+	const {user, role} = decodeJWT(hash)
+	return { user, role }
 }
 
 // https://github.com/thecodeholic/deno-serve-static-files/blob/final-version/oak/staticFileMiddleware.ts
