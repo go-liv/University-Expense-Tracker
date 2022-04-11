@@ -5,22 +5,17 @@ import { Router } from 'https://deno.land/x/oak@v6.5.1/mod.ts'
 
 import { extractCredentials, saveFile, createJWT, decodeJWT} from './modules/util.js'
 import { login, register, getUsers } from './modules/accounts.js'
-import { addExpense, getExpenses, getExpenseDesc, getReceipt, changeExpenseStatus } from './modules/expenses.js'
+import { addExpense, getExpenses, getExpenseDesc, changeExpenseStatus } from './modules/expenses.js'
 
 const router = new Router()
 
-function hostname(url) {
-	const matches = String(url).match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
-	const hostname = matches ? matches[1] : null
-
-	return hostname
-}
-// the routes defined here
+// Login route
 router.get('/api/accounts', async context => {
 	console.log('GET /api/accounts')
 	const token = context.request.headers.get('Authorization')
 	console.log(`auth: ${token}`)
 	try {
+		// Only accept basic Auth
 		console.log('checkAuth')
 		if(token === undefined) throw new Error('no auth header')
 		const [type, hash] = token.split(' ')
@@ -29,10 +24,11 @@ router.get('/api/accounts', async context => {
 		if(str.indexOf(':') === -1) throw new Error('invalid auth format')
 		const [user, pass] = str.split(':')
 		console.log(`username: ${user}`)
+		// Check database for the credentials passed
 		const creds = await login(user, pass)
 		console.log(`username: ${creds.user}`)
 		console.log(`role: ${creds.role}`)
-		// create jwt cookie
+		// Create JWT
         const jwt = await createJWT(creds.user, creds.role)
 		context.response.body = { 
 			status: 'success',
@@ -48,13 +44,13 @@ router.get('/api/accounts', async context => {
 				self: {
 					name: 'login',
 					desc: 'login in the system',
-					href: `https://${hostname(context.request.url)}/api/expenses`,
+					href: `https://${context.request.url.hostname}/api/expenses`,
 					type: 'GET',
 				},
 				register: {
 					name: 'register',
 					desc: 'register a new user account',
-					href: `https://${hostname(context.request.url)}/api/accounts`,
+					href: `https://${context.request.url.hostname}/api/accounts`,
 					type: 'POST'
 				}
 			}
@@ -72,6 +68,7 @@ router.get('/api/accounts', async context => {
 	}
 })
 
+// Register an account
 router.post('/api/accounts', async context => {
 	console.log('POST /api/accounts')
 	const body  = await context.request.body()
@@ -87,13 +84,13 @@ router.post('/api/accounts', async context => {
 				self: {
 					name: 'register',
 					desc: 'register a new user account',
-					href: `https://${hostname(context.request.url)}/api/accounts`,
+					href: `https://${context.request.url.hostname}/api/accounts`,
 					type: 'POST'
 				},
 				login: {
 					name: 'login',
 					desc: 'login in the system',
-					href: `https://${hostname(context.request.url)}/api/expenses`,
+					href: `https://${context.request.url.hostname}/api/expenses`,
 					type: 'GET',
 				}
 			}
@@ -136,20 +133,20 @@ router.get("/api/users", async context => {
 				self: {
 					name: 'userList',
 					desc: 'description of all users',
-					href: `https://${hostname(context.request.url)}/api/users`,
+					href: `https://${context.request.url.hostname}/api/users`,
 					type: 'GET'
 				},
 				expenses: [
 					{
 						name: 'expenses',
 						desc: 'retrieve expenses for single user, or for manager',
-						href: `https://${hostname(context.request.url)}/api/expenses`,
+						href: `https://${context.request.url.hostname}/api/expenses`,
 						type: 'GET',
 					},
 					{
 						name: 'expenses',
 						desc: 'add expense to database under username in authorization',
-						href: `https://${hostname(context.request.url)}/api/expenses`,
+						href: `https://${context.request.url.hostname}/api/expenses`,
 						type: 'POST',
 					}
 				]
@@ -205,13 +202,13 @@ router.get("/api/expenses/:id", async context => {
 				self: {
 					name: 'expenseDesc',
 					desc: 'description of expense with id',
-					href: `https://${hostname(context.request.url)}/api/expenses/:id`,
+					href: `https://${context.request.url.hostname}/api/expenses/:id`,
 					type: 'GET'
 				},
 				changeStatus: {
 					name: 'changeStatus',
 					desc: 'change expense status',
-					href: `https://${hostname(context.request.url)}/api/expenses/:id`,
+					href: `https://${context.request.url.hostname}/api/expenses/:id`,
 					type: 'PUT'
 				}
 			}
@@ -228,6 +225,8 @@ router.get("/api/expenses/:id", async context => {
 		}
 	}
 })
+
+// Change expense status (for managers)
 router.put("/api/expenses/:id", async context => {      
 	console.log('PUT /api/expenses/id')
 	try {
@@ -255,13 +254,13 @@ router.put("/api/expenses/:id", async context => {
 				self: {
 					name: 'changeStatus',
 					desc: 'change expense status',
-					href: `https://${hostname(context.request.url)}/api/expenses/:id`,
+					href: `https://${context.request.url.hostname}/api/expenses/:id`,
 					type: 'PUT'
 				},
 				description: {
 						name: 'expenseDesc',
 						desc: 'description of expense with id',
-						href: `https://${hostname(context.request.url)}/api/expenses/:id`,
+						href: `https://${context.request.url.hostname}/api/expenses/:id`,
 						type: 'GET'
 				}
 			}
@@ -309,13 +308,13 @@ router.get("/api/expenses", async context => {
 					{
 						name: 'expenses',
 						desc: 'retrieve expenses for single user, or for manager',
-						href: `https://${hostname(context.request.url)}/api/expenses`,
+						href: `https://${context.request.url.hostname}/api/expenses`,
 						type: 'GET',
 					},
 					{
 						name: 'expenses',
 						desc: 'add expense to database under username in authorization',
-						href: `https://${hostname(context.request.url)}/api/expenses`,
+						href: `https://${context.request.url.hostname}/api/expenses`,
 						type: 'POST',
 					}
 				],
@@ -323,13 +322,13 @@ router.get("/api/expenses", async context => {
 					{
 						name: 'expenseDesc',
 						desc: 'description of expense with id',
-						href: `https://${hostname(context.request.url)}/api/expenses/:id`,
+						href: `https://${context.request.url.hostname}/api/expenses/:id`,
 						type: 'GET'
 					},
 					{
 						name: 'changeStatus',
 						desc: 'change expense status',
-						href: `https://${hostname(context.request.url)}/api/expenses/:id`,
+						href: `https://${context.request.url.hostname}/api/expenses/:id`,
 						type: 'PUT'
 					}
 				]
@@ -349,6 +348,7 @@ router.get("/api/expenses", async context => {
 		)
 	}
 })
+
 // Add Expense
 router.post("/api/expenses", async context => {      
 	console.log('POST /api/expenses')
@@ -373,13 +373,13 @@ router.post("/api/expenses", async context => {
 					{
 						name: 'expenses',
 						desc: 'add expense to database under username in authorization',
-						href: `https://${hostname(context.request.url)}/api/expenses`,
+						href: `https://${context.request.url.hostname}/api/expenses`,
 						type: 'POST',
 					},
 					{
 						name: 'expenses',
 						desc: 'retrieve expenses for single user, or for manager',
-						href: `https://${hostname(context.request.url)}/api/expenses`,
+						href: `https://${context.request.url.hostname}/api/expenses`,
 						type: 'GET',
 					}
 				],
@@ -387,13 +387,13 @@ router.post("/api/expenses", async context => {
 					{
 						name: 'expenseDesc',
 						desc: 'description of expense with id',
-						href: `https://${hostname(context.request.url)}/api/expenses/:id`,
+						href: `https://${context.request.url.hostname}/api/expenses/:id`,
 						type: 'GET'
 					},
 					{
 						name: 'changeStatus',
 						desc: 'change expense status',
-						href: `https://${hostname(context.request.url)}/api/expenses/:id`,
+						href: `https://${context.request.url.hostname}/api/expenses/:id`,
 						type: 'PUT'
 					}
 				]
@@ -412,6 +412,7 @@ router.post("/api/expenses", async context => {
 	}
 })
 
+// All routes not specified above
 router.get("/(.*)", async context => {      
 // 	const data = await Deno.readTextFile('static/404.html')
 // 	context.response.body = data

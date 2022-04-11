@@ -14,6 +14,7 @@ export async function setup(node) {
 	}
 }
 
+// Login the user by receiving basic auth and creating the JWT and adding it to the local storage
 async function login() {
 	event.preventDefault()
 	console.log('form submitted')

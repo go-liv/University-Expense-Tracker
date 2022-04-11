@@ -15,6 +15,7 @@ export function loadPage(page) {
 	triggerPageChange()
 }
 
+// Load templates and js scripts according to the url navigated to
 export async function triggerPageChange() {
 	console.log('pageChange')
 	let page = getPageName()

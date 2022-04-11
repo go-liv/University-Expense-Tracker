@@ -16,6 +16,7 @@ export async function setup(node) {
 	}
 }
 
+// Send the expense form in the body of a POST request to add expense to db
 async function logExpense(event) {
 	console.log('func UPLOAD EXPENSE TO DB')
 	event.preventDefault()
@@ -26,7 +27,7 @@ async function logExpense(event) {
 
 	const description = document.querySelector('textarea').value
 	
-	// Upload the file to the database and get filepath
+	// Transform the file in a DataURI to be stored in the db
 	const receipt = await file2DataURI(data.get('receipt'))
 
     const url = '/api/expenses'

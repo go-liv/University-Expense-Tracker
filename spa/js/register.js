@@ -18,6 +18,7 @@ async function register() {
 	event.preventDefault()
 	const data = new FormData(event.target)
 	
+	// get DataURI for the avatar picture
 	const avatar = await file2DataURI(data.get('avatar'))
 	console.log(avatar)
 	const url = '/api/accounts'

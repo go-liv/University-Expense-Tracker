@@ -10,7 +10,8 @@ export async function setup(node, pageIndex) {
 		if(localStorage.getItem('authorization') === null) {
 			loadPage('login')
 			return
-		} 
+		}
+		// Managers only use this page for the expense description since it is equal in managers and users
 		if(localStorage.getItem('role') === "1" && !(node.querySelector('#expenseDesc'))) loadPage('manager')
 		if(localStorage.getItem('role') === "1") {
 			customiseNavbar(['manager', 'logout'])
@@ -21,9 +22,11 @@ export async function setup(node, pageIndex) {
 		if(node.querySelector('#expenseDesc')) {
 			await loadExpenseDesc(node, json, pageIndex)
 		} else {
+			// Loads users expenses with the add expense button
 			await createExpenseList(node, json)
 		}
 		if(!(node.querySelector('#add') === null)) node.querySelector('#add').addEventListener('click', await addExpense)
+		// Receipt enlarging
 		if(!(node.querySelector('#receipt') === null)) {
 			node.querySelector('#receipt').addEventListener('click', await enlargeReceipt)
 			node.querySelector('#resetReceipt').addEventListener('click', await reduceReceipt)
@@ -33,6 +36,7 @@ export async function setup(node, pageIndex) {
 	}
 }
 
+// Get expenses according to the user 
 async function loadExpenses(node) {
 	console.log('Loading users expenses')
 	const url = '/api/expenses'
@@ -50,6 +54,7 @@ async function loadExpenses(node) {
 	return json
 }
 
+// Create list of expenses for the user
 async function createExpenseList(node, expenses) {
 	let totalAmount = 0
 	expenses.info.forEach( (expense, i) => {
@@ -67,6 +72,7 @@ async function createExpenseList(node, expenses) {
 	node.querySelector('#expenseTotal').innerText = `Total expenses amount: \u00A3${totalAmount}`
 }
 
+// Create expense description according to the id of the expense (uses the index of the clicked object to grab the id)
 async function loadExpenseDesc(node, expenses, pageIndex) {
 	console.log(`id on loadExpenseDesc: ${expenses.info[pageIndex].id}`)
 	const url = `/api/expenses/${expenses.info[pageIndex].id}`
@@ -102,6 +108,7 @@ async function loadExpenseDesc(node, expenses, pageIndex) {
 	<img src="${json.expense[0].receipt}" id="receipt" alt="Scanned receipt" width="150" height="75" />`
 }
 
+// Increase the scale of the receipt
 async function enlargeReceipt(event) {
 	event.preventDefault()
 	const img = document.querySelector('#receipt')
@@ -116,6 +123,7 @@ async function enlargeReceipt(event) {
 	reset.style.left = '65%'
 }
 
+// Decrease the scale of the receipt
 async function reduceReceipt(event) {
 	event.preventDefault()
 	const img = document.querySelector('#receipt')
@@ -123,6 +131,7 @@ async function reduceReceipt(event) {
 	document.querySelector('#resetReceipt').classList.add('hidden')
 }
 
+// Redirect user to the add expense page
 async function addExpense(event) {
 	console.log('func REDIR TO /addExpense')
 	event.preventDefault()

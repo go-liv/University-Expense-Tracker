@@ -7,6 +7,7 @@ import { db } from './db.js'
 const saltRounds = 10
 const salt = await genSalt(saltRounds)
 
+// Check whether login credentials are correct
 export async function login(user, pass) {
 	let sql = `SELECT count(id) AS count FROM accounts WHERE user="${user}";`
 	let records = await db.query(sql)
@@ -28,6 +29,7 @@ export async function login(user, pass) {
 	return { user, role }
 }
 
+// Add new credentials to the database
 export async function register(credentials) {
 	let { user, pass, fullname, avatar } = credentials
 	const userList = await db.query(`SELECT user FROM accounts WHERE user="${user}";`)
@@ -46,6 +48,7 @@ export async function register(credentials) {
 	return true
 }
 
+// Retrieve list of users that are not manager
 export async function getUsers() {
 	const users = await db.query(`SELECT roles.userid, accounts.user, accounts.fullname, accounts.avatar FROM accounts INNER JOIN roles ON accounts.id=roles.userid WHERE manager="0";`)
 

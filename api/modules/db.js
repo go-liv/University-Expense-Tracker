@@ -1,4 +1,4 @@
-
+// Teacher's code
 /* db.js */
 
 import { Client } from 'https://deno.land/x/mysql/mod.ts'

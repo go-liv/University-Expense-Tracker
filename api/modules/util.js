@@ -6,6 +6,7 @@ import { Base64 } from 'https://deno.land/x/bb64/mod.ts'
 import { Md5 } from 'https://deno.land/std/hash/md5.ts'
 import { decode, create, verify } from "https://deno.land/x/djwt@v2.4/mod.ts";
 
+// Key for JWT token generation
 const key = await crypto.subtle.generateKey(
   { name: "HMAC", hash: "SHA-512" },
   true,
@@ -23,17 +24,20 @@ export function setHeaders(context, next) {
 	next()
 }
 
+// Decode JWT token to extract user and role
 export async function decodeJWT(jwt) {
 	const [header, payload, signature] = await decode(jwt)
 	return payload
 }
 
+// Create JWT token, used on login
 export async function createJWT(user, role) {
 	console.log(`USER: ${user}`)
 	const jwt = await create({ alg: "HS512", typ: "JWT" }, { username: user, role: role }, key)
 	return jwt
 }
 
+// Verify the JWT token, used on middleware to assure the requests use valid JWTs
 export async function validJWT(jwt) {
 	try {
 		const payload = await verify(jwt, key);
@@ -44,6 +48,7 @@ export async function validJWT(jwt) {
 	}
 }
 
+// Extract user and role from the JWT
 export function extractCredentials(token) {
 	console.log('checkAuth')
 	if(token === undefined) throw new Error('no auth header')

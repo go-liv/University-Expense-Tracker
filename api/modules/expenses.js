@@ -2,6 +2,7 @@ import { format } from "https://deno.land/std@0.91.0/datetime/mod.ts";
 
 import { db } from './db.js'
 
+// Insert new expense data into the database
 export async function addExpense(data) {
 	if(!(data.receipt.includes("image"))) throw new Error('Unsupported File Type!')
     const currDateTime = format(new Date(), "yyyy-MM-dd HH:mm:ss")
@@ -11,6 +12,7 @@ export async function addExpense(data) {
 	return true
 }
 
+// Retrieve expenses general info for a user or for all users when role is manager role
 export async function getExpenses(user, role) {
 	if (role === 1) {
 		const getExpenseInfo = `SELECT id, currDate, incDate, label, amount, user FROM expense WHERE approvalStatus="not-approved" ORDER BY incDate DESC;`
@@ -28,6 +30,7 @@ export async function getExpenses(user, role) {
 	}
 }
 
+// Get all collumns from a specific expense
 export async function getExpenseDesc(id, user, role) {
 	let getExpenseDesc = null
 	if(role === 1) {
@@ -41,13 +44,7 @@ export async function getExpenseDesc(id, user, role) {
 	return expense
 } 
 
-export async function getReceipt(id) {
-	const getReceiptUrl = `SELECT location FROM receipts WHERE id="${id}";`
-	const url = await db.query(getReceiptUrl)
-	console.log(url)
-	return url
-}
-
+// Change collumn approvalStatus on specific expense (for managers only)
 export async function changeExpenseStatus(id, change) {
 	const updateExpense = `UPDATE expense SET approvalStatus="${change}" WHERE id=${id};`
 	await db.query(updateExpense)

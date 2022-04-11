@@ -34,6 +34,7 @@ export async function setup(node, userID = null) {
 	}
 }
 
+// Load all expenses with not-approved status
 async function loadExpenses(node) {
 	console.log('Loading users expenses')
 	const url = '/api/expenses'
@@ -51,6 +52,7 @@ async function loadExpenses(node) {
 	return json
 }
 
+// Get the total number of expenses awaiting approval and the amount they total to
 async function loadExpensesAwaiting(node, expenses) {
 	let totalAmount = 0
 	expenses.info.forEach( (result, i) => { totalAmount += expenses.info[i].amount })
@@ -59,6 +61,7 @@ async function loadExpensesAwaiting(node, expenses) {
 	node.querySelector('#expensesAmount').innerHTML = `<h3>Totals to: </h3>\u00A3${totalAmount.toFixed(2)}<br />`
 }
 
+// Grab all non manager users as an object
 async function loadUserList(node, expenses) {
 	console.log('Loading user list')
 	const url = '/api/users'
@@ -76,6 +79,7 @@ async function loadUserList(node, expenses) {
 	return userObj
 }
 
+// Create the list to display the above object
 async function createUserList(node, userObj, expenses) {
 	userObj.users.forEach( user => { 
 		let userCount = 0
@@ -95,6 +99,7 @@ async function createUserList(node, userObj, expenses) {
 	})
 }
 
+// Approve an expense
 async function approveExpense(event, id) {
 	event.preventDefault()
 	console.log(`approve id on loadExpenseDesc: ${event.currentTarget.expenseID}`)
@@ -116,6 +121,7 @@ async function approveExpense(event, id) {
 	return json
 }
 
+// Decline an expense
 async function declineExpense(event) {
 	event.preventDefault()
 	console.log(`decline id on loadExpenseDesc: ${event.currentTarget.expenseID}`)
@@ -137,6 +143,7 @@ async function declineExpense(event) {
 	return json
 }
 
+// Create a list to display all the expenses
 async function createExpenseList(node, expenses, user) {
 	let totalAmount = 0
 
